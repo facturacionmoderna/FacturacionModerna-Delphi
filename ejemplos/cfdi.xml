@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<cfdi:Comprobante xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" serie="A" folio="1" fecha="2013-08-02T02:03:23" sello="yAvnhlEfuz6v8RAoSycslzxUsz9Vg5sstEA9GEUKITSWiA57OnBqXUG98qBYBDuwTZnpHuzue7Qcolq58NSemUWCGg+0NlRep771OdwgXT/Dxva8fgRWs7b/G3qhUeTMwL6/Pq83K3ou35XTOaQYuijsSUKPdZkUt/1LvP4rCic=" tipoDeComprobante="ingreso" formaDePago="PAGO EN UNA SOLA EXHIBICION" condicionesDePago="CONTADO" noCertificado="20001000000200000278" certificado="MIIEQzCCAyugAwIBAgIUMjAwMDEwMDAwMDAyMDAwMDAyNzgwDQYJKoZIhvcNAQEFBQAwggFcMRowGAYDVQQDDBFBLkMuIDIgZGUgcHJ1ZWJhczEvMC0GA1UECgwmU2VydmljaW8gZGUgQWRtaW5pc3RyYWNpw7NuIFRyaWJ1dGFyaWExODA2BgNVBAsML0FkbWluaXN0cmFjacOzbiBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpw7NuMSkwJwYJKoZIhvcNAQkBFhphc2lzbmV0QHBydWViYXMuc2F0LmdvYi5teDEmMCQGA1UECQwdQXYuIEhpZGFsZ28gNzcsIENvbC4gR3VlcnJlcm8xDjAMBgNVBBEMBTA2MzAwMQswCQYDVQQGEwJNWDEZMBcGA1UECAwQRGlzdHJpdG8gRmVkZXJhbDESMBAGA1UEBwwJQ295b2Fjw6FuMTQwMgYJKoZIhvcNAQkCDCVSZXNwb25zYWJsZTogQXJhY2VsaSBHYW5kYXJhIEJhdXRpc3RhMB4XDTEyMTAyNDE3MzQ1MloXDTE2MTAyNDE3MzQ1Mlowgb0xJTAjBgNVBAMTHEdFUkFSRE8gTUFOVUVMIFRSVUpJTExPIE1PUkExJTAjBgNVBCkTHEdFUkFSRE8gTUFOVUVMIFRSVUpJTExPIE1PUkExJTAjBgNVBAoTHEdFUkFSRE8gTUFOVUVMIFRSVUpJTExPIE1PUkExFjAUBgNVBC0TDVRVTUc2MjAzMTBSOTUxGzAZBgNVBAUTElRVTUc2MjAzMTBNREZSTk4wOTERMA8GA1UECxMIQ29uZmlybWEwgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMnfs7PXaVf1tRkPLRarE3P5U4Etw/cF+2j98krlLFU1g0AtScpq2517jUw950PcFJsonccgjV3oAz2XwzoHD6Xv8p2338DTqAcu1z8VQuIexF1SsOzaFmBM+hlJ9AdmcoVJSN84KqMt2lhRrCkNxaHs53p0cNKvmdSpg3AwuwglAgMBAAGjHTAbMAwGA1UdEwEB/wQCMAAwCwYDVR0PBAQDAgbAMA0GCSqGSIb3DQEBBQUAA4IBAQAHZ4swEYA6oNqyM58qEMtv+9h8jNe3fzFdmA1DMIrfXgZBSQXkuXS3AsztxEDOIu8BWUdHjW5Kd1TslODj4SSxH4ZKfaSlaF+L1/1YNjTved2pwE6HVMjgVldb630luOuTwXcWsulcd11Tqp+/0JwcKOnbU4lE/DnrdlX/XJ4RBM9ERnX4Ja71jAWHN5KHT5JPJ+zINDG6DNinX53z8iZBXo1fd+9Tt+3tBANzgljH5m8LYrb+7R0QGWvRuHsKfi8v1u4bXOnovjrSJuKUtX/yCJ12vOW7bxG61RawztggHLsdOZz4Fgcp2kQNHcbXIKodCNYylPSY3/qHmWU1hHSu" subTotal="200.00" descuento="0.00" total="232.00" metodoDePago="EFECTIVO" LugarExpedicion="CHIHUAHUA CHIHUAHUA">
+  <cfdi:Emisor rfc="TUMG620310R95" nombre="TOMAS GARCIA ALBA">
+    <cfdi:DomicilioFiscal calle="CALLE DE LA ESQUINA" noExterior="No 93" colonia="CENTRO" localidad="CHIHUAHUA" municipio="CHIHUAHUA" estado="CHIHUAHUA" pais="MEXICO" codigoPostal="31000" />
+    <cfdi:RegimenFiscal Regimen="PERSONA FISICA CON ACTIVIDAD EMPRESARIAL" />
+  </cfdi:Emisor>
+  <cfdi:Receptor rfc="XAXX010101000" nombre="Publico en General">
+    <cfdi:Domicilio pais="MEXICO" />
+  </cfdi:Receptor>
+  <cfdi:Conceptos>
+    <cfdi:Concepto cantidad="1" unidad="EA" descripcion="SERVICIOS" valorUnitario="200.00" importe="200.00" />
+  </cfdi:Conceptos>
+  <cfdi:Impuestos totalImpuestosTrasladados="32.00">
+    <cfdi:Traslados>
+      <cfdi:Traslado impuesto="IVA" tasa="16.00" importe="32.00" />
+    </cfdi:Traslados>
+  </cfdi:Impuestos>
+</cfdi:Comprobante>
