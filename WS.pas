@@ -20,6 +20,7 @@ public
   function cancelado(uuid: string; parametros : TDictionary<string, string>): TDictionary<string, WideString>;
   function base64encode(strLinea: ansiString): ansiString;
   function base64decode(strLinea: ansiString): ansiString;
+  function base64decodebyte(strLinea: ansiString): TBytes;
 
 published
 { Published declarations }
@@ -31,7 +32,7 @@ implementation
 function WSConecFM.timbrado( layout: string; parametros : TDictionary<string, string> ): TDictionary<string, WideString>;
 
 var F: TFileStream;
-    linea, strLinea, layoutB64, soapResponse, cfdi: String;
+    linea, layoutB64, strLinea, soapResponse, cfdi: String;
     XMLHTTPCFDI, xmldoc: OleVariant;
     emisorRFC, userPass, userId, urlTimbrado, generarPDF, generarCBB, generarTXT: string;
     CFDIBase64,PDFBase64, CBBBase64,TXTBase64, UUID: WideString;
@@ -39,18 +40,25 @@ var F: TFileStream;
     resultados : TDictionary<string, WideString>;
     xmlNode, node: IxmlDomNode;
     xml: IXMLDomDocument;
-
+    sText : String;
+    oFile : TStringlist;
 begin
   if FileExists(layout) then
   begin
-    F := TFileStream.Create(layout, fmOpenRead );
-    while F.Position <> F.Size do
-    begin
-      F.Read(ch, 1 );
-      strLinea := strLinea + ch;
-    end;
-    F.Free;
-    layout := strLinea
+    oFile := TStringlist.Create;
+    oFile.LoadFromFile(layout);
+    sText := oFile.Text;
+    oFile.Free;
+
+    //F := TFileStream.Create(layout, fmOpenRead );
+    //while F.Position <> F.Size do
+    //begin
+      //F.Read(ch, 1 );
+      //strLinea := strLinea + ch;
+    //end;
+    //F.Free;
+    //layout := strLinea
+    layout := sText;
   end;
   // Codificar a base 64 el layout
   layoutB64 := base64encode(layout);
@@ -234,6 +242,28 @@ function WSConecFM.base64decode(strLinea: AnsiString): ansiString;
     finally
       FreeAndNil(Decoder)
   end
+end;
+
+function WSConecFM.base64decodebyte(strLinea: AnsiString): TBytes;
+  var
+  DecodedStm: TBytesStream;
+  Decoder: TIdDecoderMIME;
+begin
+  Decoder := TIdDecoderMIME.Create(nil);
+  try
+    DecodedStm := TBytesStream.Create;
+    try
+      Decoder.DecodeBegin(DecodedStm);
+      Decoder.Decode(strLinea);
+      Decoder.DecodeEnd;
+      Result := DecodedStm.Bytes;
+      SetLength(Result, DecodedStm.Size);
+    finally
+      DecodedStm.Free;
+    end;
+  finally
+    Decoder.Free;
+  end;
 end;
 
 // Fin de Implementation

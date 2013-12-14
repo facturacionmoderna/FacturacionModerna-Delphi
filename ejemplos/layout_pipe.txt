@@ -1,4 +1,4 @@
-﻿AA|21|2013-08-09T09:12:00|Nuevo León, México|ingreso|Contado|Cheque|Pago en una sola Exhibición|No identificado|1498.00|0.00|1737.68|MXN|0.00|20001000000200000278|
+﻿AA|21|2013-12-13T09:12:00|Nuevo León, México|ingreso|Contado|Cheque|Pago en una sola Exhibición|No identificado|1498.00|0.00|1737.68|MXN|0.00|20001000000200000278|
 TUMG620310R95|FACTURACION MODERNA SA DE CV|PERSONA MORAL REGIMEN GENERAL DE LEY.
 RIO GUADALQUIVIR|238||ORIENTE DEL VALLE||San Pedro Garza Garcia|Nuevo León|México|66220
 ||||||||

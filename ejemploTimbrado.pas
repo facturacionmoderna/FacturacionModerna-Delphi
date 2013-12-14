@@ -3,11 +3,11 @@ unit ejemploTimbrado;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, WS, Generics.Collections;
+  Windows, Messages, Variants, SysUtils, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, WS, Generics.Collections, StrUtils;
 
 type
-  TForm1 = class(TForm)
+    TForm1 = class(TForm)
     Edit1: TEdit;
     Button1: TButton;
     Edit2: TEdit;
@@ -36,6 +36,8 @@ procedure TForm1.Button1Click(Sender: TObject);
     resultados : TDictionary<string, WideString>;
     msg, xmlb64, pdfb64, txtb64, cbbb64, uuid : wideString;
     f: TextFile;
+    pdfbytes, cbbbytes, xmlbytes: TBytes;
+    stream: TFileStream;
 
   begin
     Screen.Cursor:= crHourGlass;
@@ -46,6 +48,7 @@ procedure TForm1.Button1Click(Sender: TObject);
     active su servicio deberá cambiar esta información por
     sus claves de acceso en modo productivo.
     }
+
     rfc := 'ESI920427886';
     pass := 'b9ec2afa3361a59af4b4d102d3f704eabdf097d4';
     id := 'UsuarioPruebasWS';
@@ -68,41 +71,62 @@ procedure TForm1.Button1Click(Sender: TObject);
       Exit;
     end;
 
-    resultados.TryGetValue('xmlb64', xmlb64);
     resultados.TryGetValue('uuid', uuid);
 
-    xmlb64 := timbrar.base64decode(xmlb64);
-    AssignFile(f, path + 'resultados\' + uuid + '.xml');
-    Rewrite(f);
-    WriteLn(f,xmlb64);
-    CloseFile(f);
+    // Guardar XML
+    stream := TFileStream.Create(path + 'resultados\' + uuid + '.xml', fmCreate);
+    resultados.TryGetValue('xmlb64', xmlb64);
+    xmlbytes := timbrar.base64decodebyte(xmlb64);
+    try
+      if xmlbytes <> nil then
+        Stream.WriteBuffer(xmlbytes[0], Length(xmlbytes));
+    finally
+      Stream.Free;
+    end;
 
+    // Guardar PDF
     if resultados.ContainsKey('pdfb64') then
     begin
-      pdfb64 := timbrar.base64decode(pdfb64);
-      AssignFile(f, path + 'resultados\' + uuid + '.pdf');
-      Rewrite(f);
-      WriteLn(f,pdfb64);
-      CloseFile(f);
+      stream := TFileStream.Create(path + 'resultados\' + uuid + '.pdf', fmCreate);
+      resultados.TryGetValue('pdfb64', pdfb64);
+      pdfbytes := timbrar.base64decodebyte(pdfb64);
+      try
+        if pdfbytes <> nil then
+          Stream.WriteBuffer(pdfbytes[0], Length(pdfbytes));
+      finally
+        Stream.Free;
+      end;
     end;
+
+    // Guardar TXT
     if resultados.ContainsKey('txtb64') then
     begin
+      resultados.TryGetValue('txtb64', txtb64);
       txtb64 := timbrar.base64decode(txtb64);
       AssignFile(f, path + 'resultados\' + uuid + '.txt');
       Rewrite(f);
       WriteLn(f,txtb64);
       CloseFile(f);
     end;
+
+    // Guardar CBB
     if resultados.ContainsKey('cbbb64') then
     begin
-      cbbb64 := timbrar.base64decode(cbbb64);
-      AssignFile(f, path + 'resultados\' + uuid + '.png');
-      Rewrite(f);
-      WriteLn(f,cbbb64);
-      CloseFile(f);
+      stream := TFileStream.Create(path + 'resultados\' + uuid + '.png', fmCreate);
+      resultados.TryGetValue('cbbb64', cbbb64);
+      cbbbytes := timbrar.base64decodebyte(cbbb64);
+      try
+        if cbbbytes <> nil then
+          Stream.WriteBuffer(cbbbytes[0], Length(cbbbytes));
+      finally
+        Stream.Free;
+      end;
     end;
+
     Screen.Cursor:= crDefault;
+    showMessage('Timbrado Exitoso');
   end;
+
 
 {Cancelar UUID}
 procedure TForm1.Button2Click(Sender: TObject);

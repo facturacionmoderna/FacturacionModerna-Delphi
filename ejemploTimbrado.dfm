@@ -20,7 +20,7 @@ object Form1: TForm1
     Width = 369
     Height = 21
     TabOrder = 0
-    Text = 'C:\FacturacionModernaDelphi\ejemplos\ejemploTimbradoLayout'
+    Text = 'C:\FacturacionModernaDelphi_2009\ejemplos\layout_ini.ini'
   end
   object Button1: TButton
     Left = 416
