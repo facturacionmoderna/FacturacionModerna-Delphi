@@ -3,13 +3,16 @@ unit WS;
 interface
 
 uses
-  SysUtils, Classes, Windows, Forms, IdCoder, IdCoder3to4, IdBaseComponent, IdCoderMIME, jpeg, Generics.Collections, ComObj, msxml, msxmldom,  xmldom,  XMLIntf, XMLDoc;
+  SysUtils, Classes, Windows, Forms, IdCoder, IdCoder3to4, IdBaseComponent, IdCoderMIME, jpeg, Generics.Collections, ComObj, msxml, msxmldom,  xmldom,  XMLIntf, XMLDoc, EncdDecd;
 
 type
   WSConecFM = class(TObject)
 
 private
   { Private declarations }
+  function WriteFileTmp(file_path: String; myText:WideString): boolean;
+  function EncodeFile(const FileName: string): AnsiString;
+  function RandomNameFile(extension: String): String;
 
 protected
   { Protected declarations }
@@ -32,36 +35,38 @@ implementation
 function WSConecFM.timbrado( layout: string; parametros : TDictionary<string, string> ): TDictionary<string, WideString>;
 
 var F: TFileStream;
-    linea, layoutB64, strLinea, soapResponse, cfdi: String;
+    linea, strLinea, soapResponse, cfdi, file_name, file_path, path : String;
     XMLHTTPCFDI, xmldoc: OleVariant;
     emisorRFC, userPass, userId, urlTimbrado, generarPDF, generarCBB, generarTXT: string;
-    CFDIBase64,PDFBase64, CBBBase64,TXTBase64, UUID: WideString;
+    CFDIBase64,PDFBase64, CBBBase64,TXTBase64, UUID, layoutB64: WideString;
     ch: Char;
     resultados : TDictionary<string, WideString>;
     xmlNode, node: IxmlDomNode;
     xml: IXMLDomDocument;
     sText : String;
     oFile : TStringlist;
+    deleted : boolean;
 begin
-  if FileExists(layout) then
-  begin
-    oFile := TStringlist.Create;
-    oFile.LoadFromFile(layout);
-    sText := oFile.Text;
-    oFile.Free;
+  path := ExtractFilePath( Application.ExeName );
+  deleted := False;
 
-    //F := TFileStream.Create(layout, fmOpenRead );
-    //while F.Position <> F.Size do
-    //begin
-      //F.Read(ch, 1 );
-      //strLinea := strLinea + ch;
-    //end;
-    //F.Free;
-    //layout := strLinea
-    layout := sText;
+  if not FileExists(layout) then
+  begin
+    file_name := RandomNameFile('.layout');
+    file_path := path + file_name;
+    WriteFileTmp(file_path, layout);
+    layout := file_path;
+    deleted := True;
   end;
+
   // Codificar a base 64 el layout
-  layoutB64 := base64encode(layout);
+  layoutB64 := EncodeFile(layout);
+
+  if deleted then
+  begin
+    DeleteFile(PWideChar(layout));
+  end;
+
    //layout := base64decode(layoutB64);
   parametros.TryGetValue('emisorRFC', emisorRFC);
   parametros.TryGetValue('urlTimbrado', urlTimbrado);
@@ -155,7 +160,6 @@ begin
     end;
 end; // Fin de timbrado
 
-
 function WSConecFM.cancelado(uuid: string; parametros: TDictionary<System.string,System.string>) : TDictionary<string, WideString>;
 var
   soapResponse: String;
@@ -222,6 +226,19 @@ begin
   end;
 end; // Fin de Cancelado
 
+function WSConecFM.EncodeFile(const FileName: string): AnsiString;
+var
+  stream: TMemoryStream;
+begin
+  stream := TMemoryStream.Create;
+  try
+    stream.LoadFromFile(Filename);
+    result := EncodeBase64(stream.Memory, stream.Size);
+  finally
+    stream.Free;
+  end;
+end;
+
 function WSConecFM.base64encode(strLinea: AnsiString): ansiString;
   var Encoder : TIdEncoderMime;
   begin
@@ -266,5 +283,34 @@ begin
   end;
 end;
 
+function WSConecFM.WriteFileTmp(file_path: String; myText:WideString): boolean;
+var
+  content_file: WideString;
+  oFile: TStrings;
+
+begin
+  content_file := '';
+
+
+
+  oFile := TStringList.Create();
+  oFile.Text := content_file + myText;
+  oFile.SaveToFile(file_path, TUTF8Encoding.UTF8);
+
+  Result := true;
+end;
+
+function WSConecFM.RandomNameFile(extension: String): String;
+var
+  wAnyo, wMes, wDia: Word;
+  wHora, wMinutos, wSegundos, wMilisegundos: Word;
+  filename : String;
+begin
+  LongTimeFormat := 'hh:mm:ss.zzz';
+  filename := 'tmp' + TimeToStr(Now());
+  filename := StringReplace(filename, ':', '', [rfReplaceAll, rfIgnoreCase]);
+  filename := StringReplace(filename, '.', '', [rfReplaceAll, rfIgnoreCase]);
+  Result := filename + extension;
+end;
 // Fin de Implementation
 end.

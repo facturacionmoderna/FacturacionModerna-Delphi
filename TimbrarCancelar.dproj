@@ -3,7 +3,7 @@
 			<ProjectGuid>{3B3CDBAC-9FE2-4192-A98D-D073BFBB614E}</ProjectGuid>
 			<ProjectVersion>12.0</ProjectVersion>
 			<MainSource>TimbrarCancelar.dpr</MainSource>
-			<Config Condition="'$(Config)'==''">Debug</Config>
+			<Config Condition="'$(Config)'==''">Release</Config>
 			<DCC_DCCCompiler>DCC32</DCC_DCCCompiler>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -47,6 +47,7 @@
 				<Form>Form1</Form>
 			</DCCReference>
 			<DCCReference Include="WS.pas"/>
+			<DCCReference Include="CFD.pas"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>

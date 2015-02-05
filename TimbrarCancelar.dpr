@@ -3,7 +3,8 @@ program TimbrarCancelar;
 uses
   Forms,
   ejemploTimbrado in 'ejemploTimbrado.pas' {Form1},
-  WS in 'WS.pas';
+  WS in 'WS.pas',
+  CFD in 'CFD.pas';
 
 {$R *.res}
 
