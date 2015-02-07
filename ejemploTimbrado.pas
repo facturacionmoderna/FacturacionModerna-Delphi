@@ -34,6 +34,7 @@ type
 
 var
   Form1: TForm1;
+  timbrar : WSConecFM;
 
 implementation
 {$R *.dfm}
@@ -42,7 +43,6 @@ implementation
 procedure TForm1.Button1Click(Sender: TObject);
   var
     layout, rfc, pass, id, url, path : string;
-    timbrar : WSConecFM;
     parametros : TDictionary<string, string>;
     resultados : TDictionary<string, WideString>;
     msg, xmlb64, pdfb64, txtb64, cbbb64, uuid : wideString;
@@ -70,8 +70,8 @@ procedure TForm1.Button1Click(Sender: TObject);
     parametros.Add('userId', id);
     parametros.Add('urlTimbrado', url);
     parametros.Add('generarPDF', 'true');
-    parametros.Add('generarTXT', 'false');
-    parametros.Add('generarCBB', 'false');
+    parametros.Add('generarTXT', 'true');
+    parametros.Add('generarCBB', 'true');
     layout := 'C:\Users\Arango\Documents\RAD Studio\Projects\FacturacionModerna-Delphi_2009\ejemplos\ejemploTimbradoLayout.ini';
 
     resultados := timbrar.timbrado(layout, parametros);
@@ -144,7 +144,6 @@ procedure TForm1.Button1Click(Sender: TObject);
 procedure TForm1.Button2Click(Sender: TObject);
 var
   uuid, rfc, pass, id, url : string;
-  cancelar : WSConecFM;
   parametros : TDictionary<string, string>;
   resultados : TDictionary<string, WideString>;
   msg: wideString;
@@ -162,7 +161,7 @@ begin
   parametros.Add('userId', id);
   parametros.Add('urlCancelado', url);
 
-  resultados := cancelar.cancelado(uuid, parametros);
+  resultados := timbrar.cancelado(uuid, parametros);
   resultados.TryGetValue('message', msg);
   showMessage(msg);
   Screen.Cursor:= crDefault;
@@ -222,7 +221,6 @@ procedure TForm1.Button5Click(Sender: TObject);
     cfd : Comprobante;
     resp : TDictionary<String, WideString>;
     layout, rfc, pass, id, url : string;
-    timbrar : WSConecFM;
     parametros : TDictionary<string, string>;
     resultados : TDictionary<string, WideString>;
     xmlb64, pdfb64, txtb64, cbbb64, uuid : wideString;
@@ -234,19 +232,20 @@ procedure TForm1.Button5Click(Sender: TObject);
     Screen.Cursor:= crHourGlass;
     path := ExtractFilePath( Application.ExeName );
     xmlfile := Edit1.Text;
-    xsltfile := 'C:\Users\Arango\Documents\RAD Studio\Projects\FacturacionModerna-Delphi_2009\utilerias\xslt3_2\cadenaoriginal_3_2.xslt';
-    certfile := 'C:\Users\Arango\Documents\RAD Studio\Projects\FacturacionModerna-Delphi_2009\utilerias\certificados\20001000000200000278.cer';
-    keyfile := 'C:\Users\Arango\Documents\RAD Studio\Projects\FacturacionModerna-Delphi_2009\utilerias\certificados\20001000000200000278.key';
+    xsltfile := path + 'utilerias\xslt3_2\cadenaoriginal_3_2.xslt';
+    certfile := path + 'utilerias\certificados\20001000000200000278.cer';
+    keyfile := path + 'utilerias\certificados\20001000000200000278.key';
     password := '12345678a';
 
     if CheckBox1.Checked then
     begin
-        xsltfile := 'C:\Users\Arango\Documents\RAD Studio\Projects\FacturacionModerna-Delphi_2009\utilerias\xslt_retenciones\retenciones.xslt';
+        xsltfile := path + 'utilerias\xslt_retenciones\retenciones.xslt';
     end;
 
 
     { Obtener informacion del certificado }
     resp := cfd.getInfoCertificate(certfile);
+    resp.TryGetValue('status', status);
     if ( status = 'false' ) then
     begin
       resp.TryGetValue('msg', msg);
@@ -259,6 +258,7 @@ procedure TForm1.Button5Click(Sender: TObject);
 
     { Agregar informacion del certificado al xml }
     resp :=  cfd.addCertificateToXml(xmlfile, certi, certiNumber);
+    resp.TryGetValue('status', status);
     if ( status = 'false' ) then
     begin
       resp.TryGetValue('msg', msg);
@@ -281,6 +281,7 @@ procedure TForm1.Button5Click(Sender: TObject);
     resp.TryGetValue('msg', cadenaO);
 
     resp := cfd.createDigitalStamp(keyfile,cadenaO, password);
+    resp.TryGetValue('status', status);
     if ( status = 'false' ) then
     begin
       resp.TryGetValue('msg', msg);
@@ -292,6 +293,7 @@ procedure TForm1.Button5Click(Sender: TObject);
 
     { Agregar el sello al xml }
     resp := cfd.addDigitalStampToXml(xmlfile, dgSign);
+    resp.TryGetValue('status', status);
     if ( status = 'false' ) then
     begin
       resp.TryGetValue('msg', msg);
@@ -312,8 +314,8 @@ procedure TForm1.Button5Click(Sender: TObject);
     parametros.Add('userId', id);
     parametros.Add('urlTimbrado', url);
     parametros.Add('generarPDF', 'true');
-    parametros.Add('generarTXT', 'false');
-    parametros.Add('generarCBB', 'false');
+    parametros.Add('generarTXT', 'true');
+    parametros.Add('generarCBB', 'true');
 
     resultados := timbrar.timbrado(xmlfile, parametros);
     if resultados.ContainsKey('code') then

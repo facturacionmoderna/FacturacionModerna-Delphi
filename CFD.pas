@@ -258,6 +258,13 @@ begin;
     Processor.input := XMLDoc;
     Processor.transform;
     chain :=  Processor.output;
+    if (chain = '|||') then
+    begin
+      res.Add('msg', 'Error al generar la cadena original, la cadena esta vacia: ' + chain);
+      res.Add('status', 'false');
+      Result := res;
+      Exit;
+    end;
     res.Add('msg', chain);
     res.Add('status', 'true');
   except
